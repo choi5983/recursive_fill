@@ -1,0 +1,116 @@
+<html>
+<head>
+	<title>Recursive Fill</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+	<script type="text/javascript">
+
+	var world = [
+		[1,1,1,1,1,1,1],
+		[1,0,0,3,0,0,1],
+		[1,0,3,3,0,0,1],
+		[1,0,0,0,0,1,1],
+		[1,1,1,1,1,0,0]		
+	];
+
+	var mapping = {
+		1: 'brown',
+		2: 'yellow',
+		0: 'white',
+		3: 'green'
+	};
+
+	function drawBricks(){
+		var html = '';
+		for(i in world)
+		{
+			html += "<div class='row'>\n";
+			for(j in world[i])
+			{
+				html += "\t<div class='block "+mapping[ world[i][j] ]+"'></div>";
+			}
+			html += "</div>\n"
+		}
+		$('.world').html(html);
+	}
+
+	function convertMouseCoordinate(screen_x, screen_y)
+	{
+		array_x = Math.floor((screen_x-8)/34);
+		array_y = Math.floor((screen_y-8)/34);
+		start_filling_from(array_x, array_y);
+	}
+
+	function start_filling_from(x, y){
+		var original_color = world[y][x];
+		var new_color = 2;
+		fill(x,y,original_color,new_color);
+	}
+
+	function fill(x,y,original_color,new_color)
+	{
+		// console.log('came to the fill function', x, y, original_color, new_color);
+
+		//boundary restrictions
+		if(y<0 || y>=world.length || x<0 || x>=7)
+			return false;
+
+		//if the current color is NOT the same as the original color you're trying to replace, get out of the fill function
+		if(world[y][x] != original_color)
+			return false;
+
+		world[y][x] = new_color;
+		fill(x,y-1,original_color,new_color);
+		fill(x,y+1,original_color,new_color);
+		fill(x-1,y,original_color,new_color);
+		fill(x+1,y,original_color,new_color);
+		drawBricks();
+	}
+
+	$(document).ready(function(){
+		drawBricks();
+
+		$(document).click(function(e){
+			convertMouseCoordinate(e.clientX, e.clientY);
+		})
+	});
+
+	</script>
+
+
+
+	<style type="text/css">
+		.block{
+			width: 30px;
+			height: 30px;
+			display:inline-block;	
+		}
+		.brown{
+			background-color:brown;
+		}
+		.white{
+			background-color:white;
+		}
+		.yellow{
+			background-color:yellow;
+		}
+		.green{
+			background-color:green;
+		}
+	</style>
+</head>
+<body>
+
+	<div class='world'>
+
+		
+	</div>
+
+</body>
+</html>
+
+
+function move(x,y)
+{
+	
+}
